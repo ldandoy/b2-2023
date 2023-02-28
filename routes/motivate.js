@@ -13,16 +13,20 @@ Router.post('/', async (request, response) => {
     const { label } = request.body;
 
     if (label == null || label == "") {
-        return 
+        return response.status(502).json({msg: "Donnée non conforme"});
     }
 
-    const motivation = new motivationModel({
-        label: label
-    });
-    
-    await motivation.save();
+    try {
+        const motivation = new motivationModel({
+            label: label
+        });
+        
+        await motivation.save();
 
-    return response.status(200).json(motivation);
+        return response.status(200).json(motivation);
+    } catch(error) {
+        return response.status(500).json({msg: error});
+    }
 });
 
 Router.get('/', async (request, response) => {
